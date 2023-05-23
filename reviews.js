@@ -26,16 +26,16 @@ function sortReviews(reviews, goodWords) {
 
     // Calculate goodness value of review by counting number of good words in string
     let goodnessValue = 0;
-    for (let word of review) {
-      if (goodWords.includes(word)) {
+    for (let word of review.split(" ")) {
+      if (goodWords.includes(word.toLowerCase())) {
         goodnessValue++;
       }
     }
-
+    
     // Add first review and goodness value
-    if (!sortReviews.length) {
+    if (!sortedReviews.length) {
       sortedReviews.push(review);
-      sortedValues.push(count);
+      sortedValues.push(goodnessValue);
       continue outer;
     }
 
@@ -50,12 +50,13 @@ function sortReviews(reviews, goodWords) {
       // Condition to add last review/goodness value
       if (j === sortedValues.length - 1) {
         sortedValues.push(goodnessValue);
-        sortReviews.push(review);
+        sortedReviews.push(review);
+        break sorting;
       }
     }
   }
 
-  return sortReviews.reverse();
+  return sortedReviews;
 }
 
 
@@ -66,8 +67,8 @@ function sortReviewsWithMap(reviews, goodWords) {
   for (let review of reviews) {
     // Calculate goodness value of review by counting number of good words in string
     let goodnessValue = 0;
-    for (let word of review) {
-      if (goodWords.includes(word)) {
+    for (let word of review.split(" ")) {
+      if (goodWords.includes(word.toLowerCase())) {
         goodnessValue++;
       }
     }
@@ -82,9 +83,18 @@ function sortReviewsWithMap(reviews, goodWords) {
   
   // Loop over sorted goodness values and add reviews to the array
   let sortedReviews = [];
-  for (let key of Object.keys(goodnessMap).sort()) {
+  for (let key of Object.keys(goodnessMap).sort().reverse()) {
     sortedReviews = sortedReviews.concat(goodnessMap[key]);
   }
 
-  return sortedReviews.reverse();
+  return sortedReviews;
 }
+
+const goodWords = ["exellent", "durable", "good"];
+const reviews = ["Very good!", "This works so good. It's an excellent buy!", "It's the most durable device. Must buy!"];
+
+console.log("Sorted reviews with original implementation")
+console.log(sortReviews(reviews, goodWords));
+console.log("------------------------");
+console.log("Sorted reviews using map");
+console.log(sortReviewsWithMap(reviews, goodWords));
